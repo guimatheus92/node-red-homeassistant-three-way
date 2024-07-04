@@ -162,3 +162,35 @@ def get_devices_list():
         return jsonify({"message": "An error occurred while reading devices.csv"}), 500
     
     return jsonify({"devices": list(devices)})
+
+@app.route('/get_mappings')
+def get_mappings():
+    mappings_file_path = os.path.join(os.path.dirname(__file__), '..', 'mappings.csv')
+    mappings = []
+    try:
+        with open(mappings_file_path, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                mappings.append(row)
+    except FileNotFoundError:
+        app.logger.error(f"Error reading mappings.csv: File not found at {mappings_file_path}")
+        return jsonify({"mappings": mappings}), 500
+    except Exception as e:
+        app.logger.error(f"Error reading mappings.csv: {e}")
+        app.logger.error(traceback.format_exc())
+        return jsonify({"mappings": mappings}), 500
+    
+    return jsonify({"mappings": mappings})
+
+@app.route('/run_main', methods=['POST'])
+def run_main():
+    try:
+        result = subprocess.run(['python', 'scripts/main.py'], capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({"message": "Main function executed successfully."}), 200
+        else:
+            return jsonify({"message": f"Main function failed: {result.stderr}"}), 500
+    except Exception as e:
+        app.logger.error(f"Error running main function: {e}")
+        app.logger.error(traceback.format_exc())
+        return jsonify({"message": "An error occurred while running the main function."}), 500

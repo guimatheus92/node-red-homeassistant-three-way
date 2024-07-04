@@ -271,11 +271,41 @@ $(document).ready(function() {
     });
 
     function loadMappingsTable() {
-        let tbody = $('#mappings-table tbody');
-        tbody.empty();
-        addMappingRow();
-        highlightDuplicateRows();
-    }
+        $.get('/get_mappings', function(data) {
+            let tbody = $('#mappings-table tbody');
+            tbody.empty(); // Clear existing rows
+    
+            if (data.mappings.length === 0) {
+                addMappingRow(); // Add an empty row if there are no mappings
+            }
+    
+            data.mappings.forEach(mapping => {
+                addMappingRow({
+                    source_device: mapping.source_device,
+                    source_entity_id: mapping.source_entity_id,
+                    target_device: mapping.target_device,
+                    target_entity_id: mapping.target_entity_id,
+                    three_way: mapping.three_way === 'true'
+                });
+            });
+    
+            highlightDuplicateRows();
+        }).fail(function(response) {
+            console.log('Failed to load mappings:', response);
+            showMessage('warning', 'Failed to load mappings.');
+        });
+    }    
+    
+    $('#run-main-btn').click(function() {
+        showSpinner();
+        $.post('/run_main', function(response) {
+            showMessage('success', response.message);
+        }).fail(function(response) {
+            showMessage('warning', response.responseJSON.message);
+        }).always(function() {
+            hideSpinner();
+        });
+    });    
 
     loadMappingsTable();
 

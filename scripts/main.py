@@ -220,9 +220,9 @@ def read_mappings(file_path):
         reader = csv.DictReader(file)
         for row in reader:
             src_device = row['source_device']
-            src_entity = row['source_entityid']
+            src_entity = row['source_entity_id']
             tgt_device = row['target_device']
-            tgt_entity = row['target_entityid']
+            tgt_entity = row['target_entity_id']
             mappings.append((src_device, src_entity, tgt_device, tgt_entity))
     return mappings
 
