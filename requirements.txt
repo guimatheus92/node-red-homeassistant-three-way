@@ -1,0 +1,6 @@
+Flask
+requests
+pandas
+python-dotenv
+PyYAML
+ruamel.yaml

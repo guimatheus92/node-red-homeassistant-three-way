@@ -1,0 +1,75 @@
+/* app/static/styles.css */
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: #fff;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+    border-bottom-width: 2px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table td, .table th {
+    white-space: nowrap;
+}
+
+.form-control[title] {
+    cursor: pointer;
+}
+
+.form-control[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 10;
+    white-space: normal;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.5em 0.75em;
+    font-size: 0.75em;
+    border-radius: 0.2em;
+    margin-left: 0.5em;
+}
+
+.nav-link.active {
+    background-color: #007bff;
+    color: white;
+}

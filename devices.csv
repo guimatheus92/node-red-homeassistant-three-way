@@ -1,0 +1,3 @@
+device,entity_id
+switch_1_kitchen,switch.switch_1_kitchen_button_1
+switch_1_room,switch.switch_1_room_button_1
