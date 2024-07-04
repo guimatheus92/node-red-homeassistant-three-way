@@ -1,0 +1,28 @@
+<!-- app/templates/devices.html -->
+
+{% extends "index.html" %}
+
+{% block content %}
+<div class="mt-4">
+    <h2>Devices</h2>
+    <div class="alert alert-warning" role="alert" id="warning-message" style="display: none;"></div>
+    <div class="alert alert-success" role="alert" id="success-message" style="display: none;"></div>
+    <div class="mb-3">
+        <button class="btn btn-primary" id="fetch-devices-btn">Fetch Devices</button>
+        <button class="btn btn-success" id="save-devices-btn">Save Devices</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="devices-table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Device</th>
+                    <th>Entity ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added dynamically -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!-- app/templates/mappings.html -->
+
+{% extends "index.html" %}
+
+{% block content %}
+<div class="mt-4">
+    <h2>Mappings</h2>
+    <div class="alert alert-warning" role="alert" id="warning-message" style="display: none;"></div>
+    <div class="alert alert-success" role="alert" id="success-message" style="display: none;"></div>
+    <div class="mb-3">
+        <button class="btn btn-primary" id="add-mapping-btn">Add Mapping</button>
+        <button class="btn btn-success" id="save-mappings-btn">Save Mappings</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="mappings-table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Source Device</th>
+                    <th>Source Entity</th>
+                    <th></th>
+                    <th>Target Device</th>
+                    <th>Target Entity</th>
+                    <th>Three Way</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added dynamically -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

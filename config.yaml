@@ -1,0 +1,8 @@
+home_assistant:
+  # Your Home Assistant local URL
+  home_assistant_url: 'http://192.111.1.1:8123'
+
+  # Token to access your home assistant data
+  # You can create this token from Long-lived access token: https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token
+  # Community step by step: https://community.home-assistant.io/t/how-to-get-long-lived-access-token/162159/1
+  access_token: 'token'
