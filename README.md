@@ -31,13 +31,7 @@ This project is a web application designed to help users manage their Home Assis
 
 #### Development
 
-1. Create a `.env` file in the project root:
-
-    ```plaintext
-    SECRET_KEY=your-development-secret-key
-    ```
-
-2. Update the `config.yaml` file with your Home Assistant URL and access token:
+1. Update the `config.yaml` file with your Home Assistant URL and access token:
 
     ```yaml
     home_assistant:
@@ -45,9 +39,8 @@ This project is a web application designed to help users manage their Home Assis
       access_token: 'your-access-token'
     ```
 
-## Running the Application
 
-### Development
+2. Run app using the command below:
 
 ```sh
 flask run
@@ -81,7 +74,7 @@ node-red-homeassistant-three-way/
 └── devices.csv
 ```
 
-## Usage
+## How to use
 
 ### Accessing the Application
 
@@ -93,19 +86,49 @@ node-red-homeassistant-three-way/
 2. Update the Home Assistant URL and access token.
 3. Save the settings.
 
+![alt text](media/settings.png)
+
 ### Device Management
 
 1. Go to the "Devices" tab.
-2. Click "Fetch Devices" to retrieve the latest devices from your Home Assistant url.
+2. Click "Fetch Devices" to retrieve the latest devices from your Home Assistant (after a success message appear, refresh the page manually).
 3. The devices will be listed in the table. You can also download the `devices.csv` file.
+
+![alt text](media/devices.png)
 
 ### Mapping Management
 
 1. Go to the "Mappings" tab.
 2. Add a new mapping by selecting source and target devices and entities.
-3. Enable the "Three Way" option if needed (will turn on and turn off in both ways).
+
+![alt text](media/source-target.png)
+
+3. Enable the "Three Way" option if needed by checking the checkbox. You will notice that a new row will be added with entities in reverse (will turn on and turn off in both ways).
+
+![alt text](media/three-way.png)
+
 4. Save the mappings.
 5. The mappings will be listed in the table. You can also download the `mappings.csv` file.
+
+### Node-RED Flow
+
+1. After everything is done, click on `Run Main Function` button to generate a Node-RED Flow JSON
+
+![alt text](media/nodered-flow.png)
+
+2. Go to Node-RED, click on [Import](https://nodered.org/docs/user-guide/editor/workspace/import-export) and paste the generated JSON
+3. After you manage to paste and create a new flow, you will see something like this:
+
+![alt text](media/nodered-imported.png)
+
+4. I would suggest to do the following:
+- 4.1. CTRL + A (Select all)
+- 4.2. Install Auto Layout is suggested above in this doc
+- 4.3. Click on `Execute auto-layout` button
+
+You will see the magic happening and will look something like this:
+
+![alt text](media/nodered-autolayout.png)
 
 ## Contributing
 

@@ -14,7 +14,7 @@ def create_node_red_flow(mappings):
         {
             "id": str(uuid.uuid4()),
             "type": "tab",
-            "label": "Paralelos Virtuais",
+            "label": "Three Way Devices",
             "disabled": False,
             "info": "",
             "env": []

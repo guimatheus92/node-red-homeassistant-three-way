@@ -47,7 +47,7 @@ def fetch_devices():
         app.logger.info("Starting device fetch process")
         result = subprocess.run(['python', 'scripts/get_ha_devices_entities.py'], capture_output=True, text=True)
         app.logger.info(f"Device fetch script output: {result.stdout}")
-        if "successfully" in result.stdout:
+        if "successfully" in result.stdout or "successfully" in result.stderr:
             return jsonify({"message": "Devices fetched successfully. Please refresh the page manually to see the updated data."}), 200
         else:
             app.logger.error(f"Error fetching devices: {result.stdout}")

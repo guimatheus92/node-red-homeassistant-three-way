@@ -73,6 +73,10 @@ def fetch_devices(home_assistant_url, access_token):
 def main():
     config = read_configurations()
     home_assistant_url = os.getenv('HOME_ASSISTANT_URL', config['home_assistant']['home_assistant_url'])
+    # Making sure URL does not end with a slash
+    # Remove the trailing slash if it exists
+    if home_assistant_url.endswith('/'):
+        home_assistant_url = home_assistant_url.rstrip('/')    
     access_token = os.getenv('HOME_ASSISTANT_TOKEN', config['home_assistant']['access_token'])
 
     result = fetch_devices(home_assistant_url, access_token)
