@@ -1,5 +1,11 @@
 /* app/static/styles.css */
 
+.container {
+    width: 90%;
+    max-width: 100%;
+    padding: 0 15px;
+}
+
 .table {
     width: 100%;
     margin-bottom: 1rem;
@@ -72,4 +78,10 @@
 .nav-link.active {
     background-color: #007bff;
     color: white;
+}
+
+.arrow {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.5em;
 }

@@ -126,7 +126,7 @@ $(document).ready(function() {
 
         tr.append(sourceDeviceSelect);
         tr.append(sourceEntitySelect);
-        tr.append('<td class="arrow">→</td>');
+        tr.append('<td class="arrow">⟶</td>');
         tr.append(targetDeviceSelect);
         tr.append(targetEntitySelect);
         tr.append(`<td><input type="checkbox" class="three-way" ${mapping && mapping.three_way ? 'checked' : ''} ${isThreeWay ? 'disabled' : ''}></td>`);
@@ -271,11 +271,55 @@ $(document).ready(function() {
     });
 
     function loadMappingsTable() {
-        let tbody = $('#mappings-table tbody');
-        tbody.empty();
-        addMappingRow();
-        highlightDuplicateRows();
-    }
+        // Fetch devices first
+        $.get('/devices_list', function(devicesData) {
+            const availableDevices = devicesData.devices;
+    
+            // Then fetch mappings
+            $.get('/get_mappings', function(mappingsData) {
+                let tbody = $('#mappings-table tbody');
+                tbody.empty(); // Clear existing rows
+    
+                if (mappingsData.mappings.length === 0) {
+                    addMappingRow(); // Add an empty row if there are no mappings
+                }
+    
+                mappingsData.mappings.forEach(mapping => {
+                    // Check if both source and target devices exist in the available devices list
+                    if (availableDevices.includes(mapping.source_device) && availableDevices.includes(mapping.target_device)) {
+                        addMappingRow({
+                            source_device: mapping.source_device,
+                            source_entity_id: mapping.source_entity_id,
+                            target_device: mapping.target_device,
+                            target_entity_id: mapping.target_entity_id,
+                            three_way: mapping.three_way === 'true'
+                        });
+                    } else {
+                        console.warn(`Skipping mapping with missing device: ${mapping.source_device} or ${mapping.target_device}`);
+                    }
+                });
+    
+                highlightDuplicateRows();
+            }).fail(function(response) {
+                console.log('Failed to load mappings:', response);
+                showMessage('warning', 'Failed to load mappings.');
+            });
+        }).fail(function(response) {
+            console.log('Failed to load devices:', response);
+            showMessage('warning', 'Failed to load devices.');
+        });
+    }    
+    
+    $('#run-main-btn').click(function() {
+        showSpinner();
+        $.post('/run_main', function(response) {
+            showMessage('success', response.message);
+        }).fail(function(response) {
+            showMessage('warning', response.responseJSON.message);
+        }).always(function() {
+            hideSpinner();
+        });
+    });    
 
     loadMappingsTable();
 
