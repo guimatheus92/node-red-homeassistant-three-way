@@ -1,6 +1,6 @@
 Flask
 requests
 pandas
+pytest
 python-dotenv
 PyYAML
-ruamel.yaml

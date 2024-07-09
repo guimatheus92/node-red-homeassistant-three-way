@@ -1,3 +1,6 @@
+# App
+node_red_flow.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
