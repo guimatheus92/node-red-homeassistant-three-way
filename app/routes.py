@@ -194,3 +194,29 @@ def run_main():
         app.logger.error(f"Error running main function: {e}")
         app.logger.error(traceback.format_exc())
         return jsonify({"message": "An error occurred while running the main function."}), 500
+
+@app.route('/clear_mappings', methods=['POST'])
+def clear_mappings():
+    mappings_file_path = os.path.join(os.path.dirname(__file__), '..', 'mappings.csv')
+    try:
+        with open(mappings_file_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['source_device', 'source_entity_id', 'target_device', 'target_entity_id'])
+        return jsonify({"success": True, "message": "All mappings cleared successfully"}), 200
+    except Exception as e:
+        app.logger.error(f"Error clearing mappings: {e}")
+        app.logger.error(traceback.format_exc())
+        return jsonify({"success": False, "message": "An error occurred while clearing mappings"}), 500
+
+@app.route('/clear_devices', methods=['POST'])
+def clear_devices():
+    devices_file_path = os.path.join(os.path.dirname(__file__), '..', 'devices.csv')
+    try:
+        with open(devices_file_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['device', 'entity_id'])
+        return jsonify({"success": True, "message": "All devices cleared successfully"}), 200
+    except Exception as e:
+        app.logger.error(f"Error clearing devices: {e}")
+        app.logger.error(traceback.format_exc())
+        return jsonify({"success": False, "message": "An error occurred while clearing devices"}), 500

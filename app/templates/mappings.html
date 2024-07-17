@@ -10,7 +10,8 @@
     <div class="mb-3">
         <button class="btn btn-primary" id="add-mapping-btn">Add Mapping</button>
         <button class="btn btn-success" id="save-mappings-btn">Save Mappings</button>
-        <button class="btn btn-secondary" id="run-main-btn">Run Main Function</button> <!-- New button -->
+        <button class="btn btn-secondary" id="run-main-btn">Run Main Function</button>
+        <button class="btn btn-danger" id="clear-mappings-btn">Clear All Mappings</button>
     </div>
     <div class="table-responsive">
         <table class="table table-bordered" id="mappings-table">
@@ -30,4 +31,28 @@
         </table>
     </div>
 </div>
+<script>
+document.getElementById('clear-mappings-btn').addEventListener('click', function() {
+    if (confirm('Are you sure you want to clear all mappings?')) {
+        fetch('/clear_mappings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to clear mappings');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while clearing mappings');
+        });
+    }
+});
+</script>
 {% endblock %}

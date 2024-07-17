@@ -41,7 +41,7 @@ def fetch_devices(home_assistant_url, access_token):
             {%- set entities = device_entities(device) | list -%}
             {%- for entity in entities -%}
             {%- set entity_name = state_attr(entity, 'friendly_name') or entity -%}
-            {%- if not ('Backlight' in entity_name or 'Power-on' in entity_name or 'countdown' in entity_name) -%}
+            {%- if not ('Backlight' in entity_name or 'Power' in entity_name or 'number' in entity) -%}
             [{{ device_name }},{{ entity }}]
             {%- endif -%}
             {%- endfor -%}
