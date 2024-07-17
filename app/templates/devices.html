@@ -10,6 +10,7 @@
     <div class="mb-3">
         <button class="btn btn-primary" id="fetch-devices-btn">Fetch Devices</button>
         <button class="btn btn-success" id="save-devices-btn">Save Devices</button>
+        <button class="btn btn-danger" id="clear-devices-btn">Clear All Devices</button> <!-- New button -->
     </div>
     <div class="table-responsive">
         <table class="table table-bordered" id="devices-table">
@@ -25,4 +26,28 @@
         </table>
     </div>
 </div>
+<script>
+document.getElementById('clear-devices-btn').addEventListener('click', function() {
+    if (confirm('Are you sure you want to clear all devices?')) {
+        fetch('/clear_devices', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {                
+                location.reload();
+            } else {
+                alert('Failed to clear devices');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while clearing devices');
+        });
+    }
+});
+</script>
 {% endblock %}
