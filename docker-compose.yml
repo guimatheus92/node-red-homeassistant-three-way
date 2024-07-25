@@ -1,0 +1,10 @@
+services:
+  web:
+    container_name: node-red-homeassistant-three-way
+    image: guimatheus92/node-red-homeassistant-three-way
+    build:
+      context: .
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"

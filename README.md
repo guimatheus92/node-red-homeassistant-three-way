@@ -75,24 +75,10 @@ node-red-homeassistant-three-way/
     Build the Docker image using the following command:
 
     ```bash
-    docker build -t guimatheus92/node-red-homeassistant-three-way .
+    docker-compose up --build
     ```
 
-3. **Run the Docker Container**:
-
-    Run the Docker container, mapping port 5000 in the container to an available port on your host:
-
-    ```bash
-    docker run -d -p 5000:5000 guimatheus92/node-red-homeassistant-three-way
-    ```
-  
-    Ensure that no other service is using port 5000 on your host machine. If port 5000 is already in use, you can map to a different port (e.g., `-p 32768:5000`) by running the command below and assign a new port in the container:
-
-    ```bash
-    docker run -d -p 5000 guimatheus92/node-red-homeassistant-three-way
-    ```    
-
-4. **Access the Flask Application**:
+3. **Access the Flask Application**:
 
     Open your web browser and navigate to `http://localhost:5000` to access the application.
 
