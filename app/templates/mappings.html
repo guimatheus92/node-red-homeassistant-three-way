@@ -10,7 +10,7 @@
     <div class="mb-3">
         <button class="btn btn-primary" id="add-mapping-btn">Add Mapping</button>
         <button class="btn btn-success" id="save-mappings-btn">Save Mappings</button>
-        <button class="btn btn-secondary" id="run-main-btn">Run Main Function</button>
+        <button class="btn btn-secondary" id="generate-json-btn">Generate NodeRED JSON</button>
         <button class="btn btn-danger" id="clear-mappings-btn">Clear All Mappings</button>
     </div>
     <div class="table-responsive">
@@ -29,6 +29,9 @@
                 <!-- Rows will be added dynamically -->
             </tbody>
         </table>
+    </div>
+    <div id="loading-spinner" class="spinner-border" role="status" style="display: none;">
+        <span class="sr-only">Loading...</span>
     </div>
 </div>
 <script>
@@ -53,6 +56,34 @@ document.getElementById('clear-mappings-btn').addEventListener('click', function
             alert('An error occurred while clearing mappings');
         });
     }
+});
+
+document.getElementById('generate-json-btn').addEventListener('click', function() {
+    document.getElementById('loading-spinner').style.display = 'block';
+    fetch('/generate_nodered_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            const a = document.createElement('a');
+            a.href = `/download_file?file_path=${encodeURIComponent(data.file_path)}`;
+            a.download = 'node_red_flow.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            document.getElementById('loading-spinner').style.display = 'none';
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while generating the JSON');
+        document.getElementById('loading-spinner').style.display = 'none';
+    });
 });
 </script>
 {% endblock %}

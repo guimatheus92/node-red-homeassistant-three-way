@@ -6,3 +6,21 @@ home_assistant:
   # You can create this token from Long-lived access token: https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token
   # Community step by step: https://community.home-assistant.io/t/how-to-get-long-lived-access-token/162159/1
   access_token: 'token'
+  
+  # This template needs to be changed and matched your naming convention.
+  device_fetch_template: >
+    {%- set mqtt_devices = integration_entities('mqtt') | map('device_id') | unique | reject('eq', None) | list -%} {%- set tuya_devices = integration_entities('tuya') | map('device_id') | unique | reject('eq', None) | list -%}
+    {%- set devices = mqtt_devices + tuya_devices | unique | list -%} {%- for device in devices -%}
+      {%- set device_name = device_attr(device, 'name') -%}
+      {%- if ('interruptor' in device_name) -%}
+        {%- if not ('cenas' in device_name) -%}
+            {%- set entities = device_entities(device) | list -%}
+            {%- for entity in entities -%}
+            {%- set entity_name = state_attr(entity, 'friendly_name') or entity -%}
+            {%- if not ('Backlight' in entity_name or 'Power' in entity_name or 'number' in entity) -%}
+            [{{ device_name }},{{ entity }}]
+            {%- endif -%}
+            {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}      

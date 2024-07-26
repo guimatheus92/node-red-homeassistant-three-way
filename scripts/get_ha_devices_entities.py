@@ -21,7 +21,7 @@ def read_configurations():
     with open(config_path, 'r', encoding='utf8') as file:
         return yaml.safe_load(file)
 
-def fetch_devices(home_assistant_url, access_token):
+def fetch_devices(home_assistant_url, access_token, template):
     """
     Function to fetch devices and entities from Home Assistant
     """
@@ -29,26 +29,6 @@ def fetch_devices(home_assistant_url, access_token):
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json; charset=utf-8"
     }
-
-    template = '''
-    {%- set mqtt_devices = integration_entities('mqtt') | map('device_id') | unique | reject('eq', None) | list -%}
-    {%- set tuya_devices = integration_entities('tuya') | map('device_id') | unique | reject('eq', None) | list -%}
-    {%- set devices = mqtt_devices + tuya_devices | unique | list -%}
-    {%- for device in devices -%}
-      {%- set device_name = device_attr(device, 'name') -%}
-      {%- if ('interruptor' in device_name) -%}
-        {%- if not ('cenas' in device_name) -%}
-            {%- set entities = device_entities(device) | list -%}
-            {%- for entity in entities -%}
-            {%- set entity_name = state_attr(entity, 'friendly_name') or entity -%}
-            {%- if not ('Backlight' in entity_name or 'Power' in entity_name or 'number' in entity) -%}
-            [{{ device_name }},{{ entity }}]
-            {%- endif -%}
-            {%- endfor -%}
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-    '''
 
     payload = {"template": template}
 
@@ -78,8 +58,9 @@ def main():
     if home_assistant_url.endswith('/'):
         home_assistant_url = home_assistant_url.rstrip('/')    
     access_token = os.getenv('HOME_ASSISTANT_TOKEN', config['home_assistant']['access_token'])
+    template = os.getenv('HOME_ASSISTANT_TEMPLATE', config['home_assistant']['device_fetch_template'])
 
-    result = fetch_devices(home_assistant_url, access_token)
+    result = fetch_devices(home_assistant_url, access_token, template)
     logging.info(result)
 
 if __name__ == "__main__":

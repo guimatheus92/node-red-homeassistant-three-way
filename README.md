@@ -92,9 +92,18 @@ node-red-homeassistant-three-way/
 
 1. Go to the "Settings" tab.
 2. Update the Home Assistant URL and access token.
-3. Save the settings.
 
 ![alt text](media/settings.png)
+
+3. Check if the template JINJA code works properly in your Home Assistant Template window. Because this code can vary from one user to another.
+> In this case, this code is retrieving all devides from Tuya and MQTT sources and ignoring some entities. So, this code works on my end because I have renamed my devices and entity in a certain way.
+
+Then first, go to your Home Assistant -> Developer Tools -> Template:
+Copy and paste the code and do the changes on your end, before running in the application:
+
+![alt text](media/template-code.png)
+
+4. Save the settings.
 
 ### Device Management
 
@@ -120,7 +129,7 @@ node-red-homeassistant-three-way/
 
 ### Node-RED Flow
 
-1. After everything is done, click on `Run Main Function` button to generate a Node-RED Flow JSON
+1. After everything is done, click on `Generate NodeRED JSON` button to generate a Node-RED Flow JSON. The file will be generated and downloaded automatically.
 
 ![alt text](media/nodered-flow.png)
 
