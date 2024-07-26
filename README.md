@@ -25,54 +25,62 @@ This project is a web application designed to help users manage their Home Assis
 - Node-RED installed in Home Assistant
 - (optional) Node-RED node: [@bartbutenaers/node-red-autolayout-sidebar](https://flows.nodered.org/node/@bartbutenaers/node-red-autolayout-sidebar "@bartbutenaers/node-red-autolayout-sidebar")
 
-`pip install -r requirements.txt` to install the libraries.
-
-### Configuration
-
-#### Development
-
-1. Update the `config.yaml` file with your Home Assistant URL and access token:
-
-    ```yaml
-    home_assistant:
-      home_assistant_url: 'http://your-home-assistant-url:8123'
-      access_token: 'your-access-token'
-    ```
-
-
-2. Run app using the command below:
-
-```sh
-flask run
-```
-
 ### Directory Structure
 
 ```plaintext
 node-red-homeassistant-three-way/
-│
-├── app/
-│   ├── __init__.py
-│   ├── routes.py
-│   ├── templates/
-│   │   ├── index.html
-│   │   ├── devices.html
-│   │   ├── mappings.html
-│   │   └── settings.html
-│   ├── static/
-│   │   ├── styles.css
-│   │   └── scripts.js
-├── scripts/
-│   ├── get_ha_devices_entities.py
-│   ├── check_mapping.py
-│   ├── main.py
-├── config.py
-├── run.py
-├── requirements.txt
-├── config.yaml
-├── mappings.csv
-└── devices.csv
+  ├── .dockerignore
+  ├── .gitignore
+  ├── config.py
+  ├── config.yaml
+  ├── CONTRIBUTING.md
+  ├── devices.csv
+  ├── Dockerfile
+  ├── mappings.csv
+  ├── README.md
+  ├── requirements.txt
+  ├── run.py
+  ├── tests
+  │   └── unit_tests
+  │       └── test_functions.py
+  ├── scripts
+  │   ├── check_mapping.py
+  │   ├── get_ha_devices_entities.py
+  │   └── main.py
+  └── app
+      ├── routes.py
+      ├── __init__.py
+      ├── templates
+      │   ├── devices.html
+      │   ├── index.html
+      │   ├── mappings.html
+      │   └── settings.html
+      └── static
+          ├── favicon.ico
+          ├── scripts.js
+          └── styles.css
 ```
+
+## How to run
+
+1. **Clone the Repository**:
+
+    ```bash
+    git clone https://github.com/guimatheus92/node-red-homeassistant-three-way.git
+    cd node-red-homeassistant-three-way
+    ```
+
+2. **Build the Docker Image**:
+
+    Build the Docker image using the following command:
+
+    ```bash
+    docker-compose up --build
+    ```
+
+3. **Access the Flask Application**:
+
+    Open your web browser and navigate to `http://localhost:5000` to access the application.
 
 ## How to use
 

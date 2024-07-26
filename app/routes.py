@@ -21,17 +21,18 @@ def mappings():
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    config_file_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
+    config_file_path = '/app/config.yaml'
     
     if request.method == 'POST':
         with open(config_file_path, 'r', encoding='utf8') as file:
             config = yaml.safe_load(file)
         
+        # Update only the specific keys in the configuration
         config['home_assistant']['home_assistant_url'] = request.form['home_assistant_url']
         config['home_assistant']['access_token'] = request.form['access_token']
         
         with open(config_file_path, 'w', encoding='utf8') as file:
-            yaml.dump(config, file)
+            yaml.safe_dump(config, file)
         
         flash('Settings updated successfully', 'success')
         return redirect(url_for('settings'))
@@ -219,4 +220,4 @@ def clear_devices():
     except Exception as e:
         app.logger.error(f"Error clearing devices: {e}")
         app.logger.error(traceback.format_exc())
-        return jsonify({"success": False, "message": "An error occurred while clearing devices"}), 500
+        return jsonify({"success": False, "message": "An error occurred while clearing devices"}), 500    
