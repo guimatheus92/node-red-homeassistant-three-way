@@ -1,11 +1,33 @@
 # app/routes.py
 
-from flask import current_app as app, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
+from flask import current_app as app, render_template, request, redirect, url_for, flash, jsonify, send_from_directory, send_file
 import subprocess
 import csv
 import os
 import traceback
 import yaml
+
+def load_config():
+    config_file_paths = [
+        '/app/config.yaml',  # Docker path
+        os.path.join(os.path.dirname(__file__), '..', 'config.yaml')  # Local path
+    ]
+
+    for path in config_file_paths:
+        try:
+            with open(path, 'r', encoding='utf8') as file:
+                return yaml.safe_load(file), path
+        except FileNotFoundError:
+            continue
+    raise FileNotFoundError('config.yaml file not found in any specified location.')
+    
+def save_config(config, config_file_path):
+    try:
+        with open(config_file_path, 'w', encoding='utf8') as file:
+            yaml.safe_dump(config, file)
+    except Exception as e:
+        app.logger.error(f"Error saving settings: {e}")
+        raise
 
 @app.route('/')
 def index():
@@ -21,24 +43,28 @@ def mappings():
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    config_file_path = '/app/config.yaml'
-    
-    if request.method == 'POST':
-        with open(config_file_path, 'r', encoding='utf8') as file:
-            config = yaml.safe_load(file)
-        
-        # Update only the specific keys in the configuration
-        config['home_assistant']['home_assistant_url'] = request.form['home_assistant_url']
-        config['home_assistant']['access_token'] = request.form['access_token']
-        
-        with open(config_file_path, 'w', encoding='utf8') as file:
-            yaml.safe_dump(config, file)
-        
-        flash('Settings updated successfully', 'success')
-        return redirect(url_for('settings'))
+    try:
+        config, config_file_path = load_config()
+    except FileNotFoundError as e:
+        app.logger.error(f"Error loading settings: {e}")
+        config = {'home_assistant': {'home_assistant_url': '', 'access_token': ''}, 'device_fetch_template': ''}
+        config_file_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')  # Default to local path for saving
 
-    with open(config_file_path, 'r', encoding='utf8') as file:
-        config = yaml.safe_load(file)
+    if request.method == 'POST':
+        try:
+            # Update only the specific keys in the configuration
+            config['home_assistant']['home_assistant_url'] = request.form['home_assistant_url']
+            config['home_assistant']['access_token'] = request.form['access_token']
+            config['home_assistant']['device_fetch_template'] = request.form['device_fetch_template']
+            
+            save_config(config, config_file_path)
+            
+            flash('Settings updated successfully', 'success')
+        except Exception as e:
+            app.logger.error(f"Error updating settings: {e}")
+            flash('Failed to update settings', 'danger')
+        
+        return redirect(url_for('settings'))
 
     return render_template('settings.html', config=config)
 
@@ -58,21 +84,18 @@ def fetch_devices():
         app.logger.error(traceback.format_exc())
         return jsonify({"message": "An error occurred while fetching devices"}), 500
 
-@app.route('/save_devices', methods=['POST'])
-def save_devices():
-    devices_data = request.json.get('devices')
+@app.route('/download_devices', methods=['GET'])
+def download_devices():
     devices_file_path = os.path.join(os.path.dirname(__file__), '..', 'devices.csv')
     try:
-        with open(devices_file_path, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(['device', 'entity_id'])
-            for device in devices_data:
-                writer.writerow([device['device'], device['entity_id']])
-        return jsonify({"message": "Devices saved successfully"}), 200
+        if os.path.exists(devices_file_path):
+            return send_file(devices_file_path, as_attachment=True)
+        else:
+            return jsonify({"message": "devices.csv file not found"}), 404
     except Exception as e:
-        app.logger.error(f"Error saving devices: {e}")
+        app.logger.error(f"Error serving devices.csv: {e}")
         app.logger.error(traceback.format_exc())
-        return jsonify({"message": "An error occurred while saving devices"}), 500
+        return jsonify({"message": "An error occurred while serving devices.csv"}), 500
 
 @app.route('/devices.csv')
 def get_devices_csv():
@@ -183,12 +206,24 @@ def get_mappings():
     
     return jsonify({"mappings": mappings})
 
-@app.route('/run_main', methods=['POST'])
-def run_main():
+@app.route('/download_file')
+def download_file():
+    file_path = request.args.get('file_path')
+    if os.path.exists(file_path):
+        return send_file(file_path, as_attachment=True)
+    else:
+        return jsonify({"message": "File not found"}), 404
+
+@app.route('/generate_nodered_json', methods=['POST'])
+def generate_nodered_json():
     try:
         result = subprocess.run(['python', 'scripts/main.py'], capture_output=True, text=True)
         if result.returncode == 0:
-            return jsonify({"message": "Main function executed successfully."}), 200
+            json_file_path = os.path.join(os.path.dirname(__file__), '..', 'node_red_flow.json')
+            if os.path.exists(json_file_path):
+                return jsonify({"message": "JSON file generated successfully", "file_path": json_file_path}), 200
+            else:
+                return jsonify({"message": "JSON file not found"}), 500
         else:
             return jsonify({"message": f"Main function failed: {result.stderr}"}), 500
     except Exception as e:

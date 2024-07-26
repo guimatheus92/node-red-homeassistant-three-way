@@ -9,7 +9,7 @@
     <div class="alert alert-success" role="alert" id="success-message" style="display: none;"></div>
     <div class="mb-3">
         <button class="btn btn-primary" id="fetch-devices-btn">Fetch Devices</button>
-        <button class="btn btn-success" id="save-devices-btn">Save Devices</button>
+        <button class="btn btn-success" id="download-devices-btn">Download Devices</button>
         <button class="btn btn-danger" id="clear-devices-btn">Clear All Devices</button> <!-- New button -->
     </div>
     <div class="table-responsive">
@@ -48,6 +48,15 @@ document.getElementById('clear-devices-btn').addEventListener('click', function(
             alert('An error occurred while clearing devices');
         });
     }
+});
+
+document.getElementById('download-devices-btn').addEventListener('click', function() {
+    const a = document.createElement('a');
+    a.href = '/download_devices';
+    a.download = 'devices.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 });
 </script>
 {% endblock %}

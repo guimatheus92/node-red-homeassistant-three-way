@@ -1,4 +1,5 @@
 <!-- app/templates/settings.html -->
+
 {% extends "index.html" %}
 
 {% block content %}
@@ -12,6 +13,13 @@
         <div class="form-group">
             <label for="access_token">Access Token</label>
             <input type="text" class="form-control" id="access_token" name="access_token" value="{{ config.home_assistant.access_token }}" required>
+        </div>
+        <div class="form-group">
+            <label for="device_fetch_template">Device Fetch Template</label>
+            <div class="alert alert-warning" role="alert">
+                This template needs to be changed and matched your naming convention, check on README. Errors in the template can cause unexpected behavior.
+            </div>
+            <textarea class="form-control" id="device_fetch_template" name="device_fetch_template" rows="10" style="resize: both;">{{ config.home_assistant.device_fetch_template }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Save Settings</button>
     </form>
