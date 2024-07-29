@@ -1,6 +1,6 @@
 # Node-RED Home Assistant Three-Way Switch Manager
 
-This project is a web application designed to help users manage their Home Assistant devices and mappings, focusing on creating virtual three-way switch setups and virtual parallel switch setups throught Node-RED. The application allows users to independently manage their own device configurations and mappings.
+This project is a web application designed to help users manage their Home Assistant devices and mappings, focusing on creating virtual three-way switch setups and virtual parallel switch setups through Node-RED. The application allows users to independently manage their own device configurations and mappings.
 
 ## Features
 
@@ -17,6 +17,7 @@ This project is a web application designed to help users manage their Home Assis
   
 - **Configuration Management**:
   - Update Home Assistant configuration settings (URL and access token) via a settings page.
+  - Test Home Assistant connection to verify URL and access token.
 
 ## Requirements
 
@@ -95,15 +96,19 @@ node-red-homeassistant-three-way/
 
 ![alt text](media/settings.png)
 
-3. Check if the template JINJA code works properly in your Home Assistant Template window. Because this code can vary from one user to another.
-> In this case, this code is retrieving all devides from Tuya and MQTT sources and ignoring some entities. So, this code works on my end because I have renamed my devices and entity in a certain way.
+3. Test the connection to ensure the URL and token are correct by clicking the "Test Connection" button. A message will be displayed indicating whether the connection was successful.
+
+![alt text](media/test-connection.png)
+
+4. Check if the template JINJA code works properly in your Home Assistant Template window. Because this code can vary from one user to another.
+> In this case, this code is retrieving all devices from Tuya and MQTT sources and ignoring some entities. So, this code works on my end because I have renamed my devices and entity in a certain way.
 
 Then first, go to your Home Assistant -> Developer Tools -> Template:
 Copy and paste the code and do the changes on your end, before running in the application:
 
 ![alt text](media/template-code.png)
 
-4. Save the settings.
+5. Save the settings.
 
 ### Device Management
 
