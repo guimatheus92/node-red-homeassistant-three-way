@@ -6,6 +6,7 @@ import csv
 import os
 import traceback
 import yaml
+import requests
 
 def load_config():
     config_file_paths = [
@@ -255,4 +256,27 @@ def clear_devices():
     except Exception as e:
         app.logger.error(f"Error clearing devices: {e}")
         app.logger.error(traceback.format_exc())
-        return jsonify({"success": False, "message": "An error occurred while clearing devices"}), 500    
+        return jsonify({"success": False, "message": "An error occurred while clearing devices"}), 500
+
+@app.route('/test_connection', methods=['POST'])
+def test_connection():
+    try:
+        data = request.json
+        home_assistant_url = data.get('home_assistant_url')
+        access_token = data.get('access_token')
+
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json; charset=utf-8"
+        }
+
+        response = requests.get(f"{home_assistant_url}/api/", headers=headers)
+
+        if response.status_code == 200:
+            return jsonify({"success": True, "message": "Connection successful!"}), 200
+        else:
+            return jsonify({"success": False, "message": "Failed to connect. Please check your URL and token."}), response.status_code
+    except Exception as e:
+        app.logger.error(f"Error testing connection: {e}")
+        app.logger.error(traceback.format_exc())
+        return jsonify({"success": False, "message": "An error occurred while testing the connection."}), 500        
